@@ -1,0 +1,20 @@
+---
+- hosts: ROUTER
+  gather_facts: no
+  connection: network_cli
+
+  tasks:
+  - name: eigrp
+    ios_config:
+        lines:
+              - network 0.0.0.0 0.0.0.0
+
+        parents: Router eigrp 1
+
+  - name: show ip eigrp
+    ios_command:
+       commands: show ip eigrp neighbors
+    register: output
+
+  - name: print status output of {{ inventory_hostname }}
+    debug: var=output["stdout_lines"]
